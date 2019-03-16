@@ -1,0 +1,21 @@
+- name: check if ssh key exists
+  stat:
+    path: "{{data_dir}}/key"
+  register: ssh_key_stat
+  tags: provision
+
+- name: create ssh key
+  when: not ssh_key_stat.stat.exists
+  command: ssh-keygen -t rsa -b 4096 -f "{{data_dir}}/key" -N ''
+  tags: provision
+
+- name: load ssh key
+  slurp:
+    path: "{{data_dir}}/key"
+  register: ssh_key
+  tags: provision
+
+- name: replace ssh key with local key
+  when: not ssh_key_stat.stat.exists
+  command: scp -P 2222 -i packer/insecure-keys/id_rsa "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
+  tags: provision

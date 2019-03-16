@@ -2,10 +2,12 @@
   stat:
     path: "{{data_dir}}/name"
   register: vm_name_stat
+  tags: provision
 
 - name: set name
   when: not vm_name_stat.stat.exists
   include_tasks: ./set_name.yml
+  tags: provision
 
 - name: load vm name
   slurp:

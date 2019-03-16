@@ -1,0 +1,5 @@
+- hosts: localhost
+  roles:
+    - vm_image
+    - vm_name
+    - vm_instance

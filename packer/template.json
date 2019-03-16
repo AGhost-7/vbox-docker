@@ -1,0 +1,42 @@
+{
+	"builders": [
+		{
+			"name": "vbox-minimal",
+			"type": "virtualbox-iso",
+			"guest_os_type": "Linux_64",
+			"iso_url": "https://dl-4.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-virt-3.9.2-x86_64.iso",
+      "iso_checksum": "75a784aa16ab6311dbf597bdec86259183ba5e74633e7e9201300d848d457216",
+"iso_checksum_type": "sha256",
+			"headless": true,
+			"ssh_username": "root",
+			"ssh_password": "vbox-minimal",
+			"ssh_port": 22,
+			"ssh_wait_timeout": "3600s",
+			"boot_wait": "15s",
+			"http_directory": ".",
+			"shutdown_command": "/sbin/poweroff",
+			"boot_command": [
+        "<enter><wait10>",
+        "root<enter><wait>",
+        "ifconfig eth0 up && udhcpc -i eth0<enter><wait>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/alpine.cfg<enter><wait>",
+        "sed -i -e \"/rc-service/d\" /sbin/setup-sshd<enter><wait>",
+        "printf \"vbox-minimal\\nvbox-minimal\\ny\\n\" | setup-alpine -f /root/alpine.cfg ; ",
+        "mount /dev/sda2 /mnt && ",
+        "echo 'PasswordAuthentication yes' >> /mnt/etc/ssh/sshd_config && ",
+        "echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config && ",
+        "umount /mnt/boot && umount /mnt ; reboot<enter>"
+			],
+			"format": "ovf",
+			"output_directory": "output/minimal"
+		}
+	],
+	"post-processors": [
+		{
+			"type": "shell-local",
+			"scripts": [
+				"./upload.py"
+			]
+		}
+	]
+}

@@ -1,0 +1,27 @@
+- name: list vms
+  shell: VBoxManage list vms | cut -d ' ' -f 1 | tr -d '"'
+  register: vm_list
+
+- name: create vm if not present
+  when: vm_name not in vm_list.stdout
+  # "{{vm_name}}" not in "{{vm_list.stdout}}"
+  command: VBoxManage createvm --name "{{vm_name}}" --ostype Ubuntu_64 --register
+
+- name: set ram
+  command: VBoxManage modifyvm "{{vm_name}}" --memory "{{vm_memory}}"
+
+- name: set number of cpus
+  command: VBoxManage modifyvm "{{vm_name}}" --cpus "{{vm_cpus}}"
+
+- name: set boot order
+  command: VBoxManage modifyvm "{{vm_name}}" --boot1 disk
+
+- name: set networking
+  command: VBoxManage modifyvm "{{vm_name}}" --nic1 nat --natpf1 "guestssh,tcp,,2222,,22"
+
+# TODO: make idempotent
+- name: create main storage controller
+  command: VBoxManage storagectl "{{vm_name}}" --name main --add sata --controller IntelAhci --bootable on
+
+- name: attach main storage
+  command: VBoxManage storageattach "{{vm_name}}" --storagectl main --port 0 --device 0 --type hdd --medium "{{data_dir}}/ubuntu.vdi"

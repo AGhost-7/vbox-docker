@@ -17,5 +17,7 @@
 
 - name: replace ssh key with local key
   when: not ssh_key_stat.stat.exists
+  retries: 5
+  delay: 5
   command: scp -P 2222 -i packer/insecure-keys/id_rsa "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision

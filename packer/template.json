@@ -47,6 +47,10 @@
 				"cat /root/insecure-key.pub > /root/.ssh/authorized_keys",
 				"rm /root/insecure-key.pub"
 			]
+		},
+		{
+			"type": "shell",
+			"inline": ["apk add --no-cache python"]
 		}
 	],
 	"post-processors": []

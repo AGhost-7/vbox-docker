@@ -10,7 +10,7 @@ cd "$(dirname "$script_source")"
 
 case "$1" in
 	ssh)
-		ssh -i .data/key -p 2222 root@localhost
+		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2222 root@localhost
 		;;
 	start)
 		ansible-playbook -i inventory ./start.yml

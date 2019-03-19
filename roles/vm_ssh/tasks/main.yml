@@ -24,14 +24,20 @@
   set_fact:
     vm_ssh_key: "{{data_dir}}/key"
 
+- name: set ssh options
+  set_fact:
+    ssh_options: -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+
 - name: wait until ssh is available
   retries: 10000
   delay: 10
-  command: ssh -p 2222 -i {{vm_ssh_key}} root@localhost
+  until: ssh_exit.rc == 0
+  command: ssh {{ssh_options}} -p 2222 -i {{vm_ssh_key}} root@localhost exit
+  register: ssh_exit
 
 - name: replace ssh key with local key
   when: not ssh_key_stat.stat.exists
-  command: scp -P 2222 -i packer/insecure-keys/id_rsa "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
+  command: scp {{ssh_options}} -P 2222 -i {{vm_ssh_key}} "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision
 
 - name: find the ip address of the vm
@@ -41,11 +47,11 @@
 - debug:
     var: vm_private_address
 
-- name: add vm as host
-  add_host:
-    hostname: "{{vm_private_address.stdout}}"
-    ansible_host: "{{vm_private_address.stdout}}"
-    ansible_ssh_private_key_file: "{{data_dir}}/key"
-    ansible_ssh_user: root
-    ansible_python_interpreter: /usr/bin/python3
-    groups: vm
+    #- name: add vm as host
+    #  add_host:
+    #    hostname: "{{vm_private_address.stdout}}"
+    #    ansible_host: "{{vm_private_address.stdout}}"
+    #    ansible_ssh_private_key_file: "{{data_dir}}/key"
+    #    ansible_ssh_user: root
+    #    ansible_python_interpreter: /usr/bin/python3
+    #    groups: vm

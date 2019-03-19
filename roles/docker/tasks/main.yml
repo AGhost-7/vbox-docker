@@ -1,0 +1,11 @@
+- name: ensure that the community repos are enabled
+  lineinfile:
+    path: /etc/apk/repositories
+    regexp: 'community$'
+    line: 'https://dl-4.alpinelinux.org/alpine/3.9/community'
+
+- name: add docker
+  apk:
+    name: docker
+    update_cache: True
+  register: add_docker

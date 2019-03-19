@@ -7,7 +7,6 @@
 - name: create ssh key
   when: not ssh_key_stat.stat.exists
   command: ssh-keygen -t rsa -b 4096 -f "{{data_dir}}/key" -N ''
-  tags: provision
 
 - name: load ssh key
   slurp:
@@ -15,9 +14,38 @@
   register: ssh_key
   tags: provision
 
+- name: set key to use
+  when: not ssh_key_stat.stat.exists
+  set_fact:
+    vm_ssh_key: 'packer/insecure-keys/id_rsa'
+
+- name: set key to use
+  when: ssh_key_stat.stat.exists
+  set_fact:
+    vm_ssh_key: "{{data_dir}}/key"
+
+- name: wait until ssh is available
+  retries: 10000
+  delay: 10
+  command: ssh -p 2222 -i {{vm_ssh_key}} root@localhost
+
 - name: replace ssh key with local key
   when: not ssh_key_stat.stat.exists
-  retries: 5
-  delay: 5
   command: scp -P 2222 -i packer/insecure-keys/id_rsa "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision
+
+- name: find the ip address of the vm
+  shell: ssh -i "{{data_dir}}/key" -p 2222 root@localhost 'ifconfig eth1' | awk '$1 == "inet" { print $2 }' | cut -d ':' -f 2
+  register: vm_private_address
+
+- debug:
+    var: vm_private_address
+
+- name: add vm as host
+  add_host:
+    hostname: "{{vm_private_address.stdout}}"
+    ansible_host: "{{vm_private_address.stdout}}"
+    ansible_ssh_private_key_file: "{{data_dir}}/key"
+    ansible_ssh_user: root
+    ansible_python_interpreter: /usr/bin/python3
+    groups: vm

@@ -1,6 +1,7 @@
-- hosts: localhost
+- hosts: host
   roles:
-    - vm_image
-    - vm_name
-    - vm_instance
-    - vm_ssh
+  - data_dir
+  - vm_image
+  - vm_name
+  - vm_instance
+  - vm_ssh

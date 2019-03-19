@@ -1,8 +1,4 @@
 
-- name: find python shell
-  shell: which python python2 python3 | head -n1
-  register: python_shell
-
 - name: generate vm name
   shell: uuidgen
   register: vm_name_uuid

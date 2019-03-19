@@ -23,7 +23,8 @@
 				"root<enter><wait>",
 				"ifconfig eth0 up && udhcpc -i eth0<enter><wait>",
 				"wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/alpine.cfg<enter><wait>",
-				"sed -i -e \"/rc-service/d\" /sbin/setup-sshd<enter><wait>",
+				"apk add openssh<enter><wait>",
+				"rc-update add openssh<enter><wait>",
 				"printf \"vbox-minimal\\nvbox-minimal\\ny\\n\" | setup-alpine -f /root/alpine.cfg ; ",
 				"mount /dev/sda2 /mnt && ",
 				"echo 'PasswordAuthentication yes' >> /mnt/etc/ssh/sshd_config && ",
@@ -50,7 +51,7 @@
 		},
 		{
 			"type": "shell",
-			"inline": ["apk add --no-cache python"]
+			"inline": ["apk add --no-cache python3"]
 		}
 	],
 	"post-processors": []

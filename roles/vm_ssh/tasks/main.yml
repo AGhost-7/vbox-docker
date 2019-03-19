@@ -41,7 +41,7 @@
   tags: provision
 
 - name: find the ip address of the vm
-  shell: ssh -i "{{data_dir}}/key" -p 2222 root@localhost 'ifconfig eth1' | awk '$1 == "inet" { print $2 }' | cut -d ':' -f 2
+  shell: ssh {{ssh_options}} -i "{{data_dir}}/key" -p 2222 root@localhost 'ifconfig eth1' | awk '$1 == "inet" { print $2 }' | cut -d ':' -f 2
   register: vm_private_address
 
 - debug:

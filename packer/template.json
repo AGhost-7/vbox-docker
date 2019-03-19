@@ -51,11 +51,15 @@
 		},
 		{
 			"type": "shell",
-			"inline": ["apk add --no-cache python3"]
+			"inline": [
+				"# Needed for ansible",
+				"apk add --no-cache python3"
+			]
 		},
 		{
 			"type": "shell",
 			"inline": [
+				"# Silence out annoying error at startup.",
 				"echo 'UseDNS no' >> /etc/ssh/sshd_config"
 			]
 		}

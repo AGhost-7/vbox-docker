@@ -13,7 +13,7 @@ case "$1" in
 		ssh -i .data/key -p 2222 root@localhost
 		;;
 	start)
-		ansible-playbook -i localhost, --connection=local ./start.yml
+		ansible-playbook -i inventory ./start.yml
 		;;
 	stop)
 		VBoxManage controlvm "$(cat .data/name)" poweroff

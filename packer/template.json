@@ -50,12 +50,10 @@
 			]
 		},
 		{
-			"_comment": "Needed for ansible",
 			"type": "shell",
 			"inline": ["apk add --no-cache python3"]
 		},
 		{
-			"_comment": "Silence out annoying error when ssh is starting up",
 			"type": "shell",
 			"inline": [
 				"echo 'UseDNS no' >> /etc/ssh/sshd_config"

@@ -12,13 +12,16 @@
 - name: set boot order
   command: VBoxManage modifyvm "{{vm_name}}" --boot1 disk
 
-- name: create network interface
+- name: create network interface for private ip
   command: VBoxManage hostonlyif create
   register: hostonlyif_create
 
 - name: extract network interface name
   set_fact:
     vm_interface: "{{hostonlyif_create.stdout | regex_search('vboxnet[0-9]+')}}"
+
+- name: configure to use dhcp
+  command: VBoxManage dhcpserver add --netname "HostInterfaceNetworking-{{vm_interface}}" --netmask 255.255.255.0 --enable --lowerip 10.77.77.5 --upperip 10.77.77.250 --ip 10.77.77.4
 
 - name: store network interface
   copy:
@@ -28,7 +31,7 @@
 - name: configure ssh and external networking
   command: VBoxManage modifyvm "{{vm_name}}" --nic1 nat --natpf1 "guestssh,tcp,,2222,,22"
 
-- name: set private networking
+- name: add private networking adapter
   command: VBoxManage modifyvm "{{vm_name}}" --nic2 hostonly --hostonlyadapter2 "{{vm_interface}}"
 
 - name: create main storage controller

@@ -5,3 +5,7 @@
   - vm_name
   - vm_instance
   - vm_ssh
+
+- hosts: vm
+  roles:
+  - docker

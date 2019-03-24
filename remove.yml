@@ -1,5 +1,6 @@
-- hosts: host
+- hosts: localhost
+  connection: local
   roles:
-  - data_dir
+  - vm_data
   - vm_name
   - vm_remove

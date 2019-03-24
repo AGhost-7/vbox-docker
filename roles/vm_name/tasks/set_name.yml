@@ -6,4 +6,4 @@
 - name: set vm name
   copy:
     content: "docker-{{vm_name_uuid.stdout}}"
-    dest: "{{data_dir}}/name"
+    dest: "{{vm_data}}/name"

@@ -20,13 +20,12 @@
   set_fact:
     vm_interface: "{{hostonlyif_create.stdout | regex_search('vboxnet[0-9]+')}}"
 
-- name: configure to use dhcp
-  command: VBoxManage dhcpserver add --netname "HostInterfaceNetworking-{{vm_interface}}" --netmask 255.255.255.0 --lowerip 10.77.77.5 --upperip 10.77.77.250 --ip 10.77.77.4 --enable
+- name: configure interface
+  command: VBoxManage hostonlyif ipconfig {{vm_interface}} --ip 10.77.77.77
 
-- name: store network interface
-  copy:
-    content: "{{vm_interface}}"
-    dest: "{{data_dir}}/interface"
+    #- name: configure to use dhcp
+    #  command: VBoxManage dhcpserver add --netname "HostInterfaceNetworking-{{vm_interface}}" --netmask 255.255.255.0 --lowerip 10.77.77.5 --upperip 10.77.77.250 --ip 10.77.77.4 --enable
+    #
 
 - name: configure ssh and external networking
   command: VBoxManage modifyvm "{{vm_name}}" --nic1 nat --natpf1 "guestssh,tcp,127.0.0.1,2222,,22"
@@ -38,4 +37,4 @@
   command: VBoxManage storagectl "{{vm_name}}" --name main --add sata --controller IntelAhci --bootable on
 
 - name: attach main storage
-  command: VBoxManage storageattach "{{vm_name}}" --storagectl main --port 0 --device 0 --type hdd --medium "{{data_dir}}/vbox-docker.vdi"
+  command: VBoxManage storageattach "{{vm_name}}" --storagectl main --port 0 --device 0 --type hdd --medium "{{vm_data}}/vbox-docker.vdi"

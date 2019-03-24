@@ -3,9 +3,18 @@
     path: /etc/apk/repositories
     regexp: 'community$'
     line: 'https://dl-4.alpinelinux.org/alpine/v3.9/community'
+  tags: provision
 
 - name: add docker
   apk:
     name: docker
     update_cache: True
   register: add_docker
+  tags: provision
+
+- name: ensure docker starts on reboot
+  service:
+    name: docker
+    enabled: True
+    state: started
+  tags: provision

@@ -13,13 +13,14 @@ case "$1" in
 		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2222 root@localhost
 		;;
 	start)
-		ansible-playbook -i inventory ./start.yml
+		ansible-playbook -i localhost, ./start-vm.yml
+		ansible-playbook -i localhost, ./start-docker.yml
 		;;
 	stop)
 		VBoxManage controlvm "$(cat .data/name)" poweroff
 		;;
 	remove)
-		ansible-playbook -i inventory ./remove.yml
+		ansible-playbook -i localhost, ./remove.yml
 		;;
 	*)
 		echo "Unknown command $1" >&2

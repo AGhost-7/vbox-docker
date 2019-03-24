@@ -1,17 +1,7 @@
 - name: check if ssh key exists
   stat:
-    path: "{{data_dir}}/key"
+    path: "{{vm_data}}/key"
   register: ssh_key_stat
-  tags: provision
-
-- name: create ssh key
-  when: not ssh_key_stat.stat.exists
-  command: ssh-keygen -t rsa -b 4096 -f "{{data_dir}}/key" -N ''
-
-- name: load ssh key
-  slurp:
-    path: "{{data_dir}}/key"
-  register: ssh_key
   tags: provision
 
 - name: set key to use
@@ -22,7 +12,7 @@
 - name: set key to use
   when: ssh_key_stat.stat.exists
   set_fact:
-    vm_ssh_key: "{{data_dir}}/key"
+    vm_ssh_key: "{{vm_data}}/key"
 
 - name: set ssh options
   set_fact:
@@ -35,33 +25,11 @@
   command: ssh {{ssh_options}} -p 2222 -i {{vm_ssh_key}} root@localhost exit
   register: ssh_exit
 
+- name: create ssh key
+  when: not ssh_key_stat.stat.exists
+  command: ssh-keygen -t rsa -b 4096 -f "{{vm_data}}/key" -N ''
+
 - name: replace ssh key with local key
   when: not ssh_key_stat.stat.exists
-  command: scp {{ssh_options}} -P 2222 -i {{vm_ssh_key}} "{{data_dir}}/key.pub" root@localhost:/root/.ssh/authorized_keys
+  command: scp {{ssh_options}} -P 2222 -i {{vm_ssh_key}} "{{vm_data}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision
-
-- name: load info
-  command: VBoxManage showvminfo "{{vm_name}}" --machinereadable
-  register: vm_info
-
-- name: extract vm facts
-  set_fact:
-    vm_hostonlyif: "{{vm_info.stdout | regex_search('(?<=hostonlyadapter2=\")[^\"]+')}}"
-
-- name: get interface information
-  command: ifconfig {{vm_hostonlyif}}
-  register: ifconfig
-
-- name: set vm address
-  set_fact:
-    vm_address: "{{ifconfig.stdout | regex_search('(?<=inet )\\d+\\.\\d+\\.\\d+\\.\\d+')}}"
-
-- name: add vm to inventory
-  add_host:
-    hostname: "{{vm_address}}"
-    ansible_host: "{{vm_address}}"
-    ansible_ssh_private_key_file: "{{data_dir}}/key"
-    ansible_ssh_user: root
-    ansible_ssh_port: 2222
-    ansible_python_interpreter: /usr/bin/python3
-    groups: vm

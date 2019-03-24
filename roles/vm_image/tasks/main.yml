@@ -2,17 +2,17 @@
 - name: download alpine image
   get_url:
     url: https://github.com/AGhost-7/vbox-docker/releases/download/v19.03.16%2B1/vbox-docker.vmdk
-    dest: "{{data_dir}}/vbox-docker.vmdk"
+    dest: "{{vm_data}}/vbox-docker.vmdk"
   register: vmdk_image
   tags: provision
 
 - name: check if vdi exists
   stat:
-    path: "{{data_dir}}/vbox-docker.vdi"
+    path: "{{vm_data}}/vbox-docker.vdi"
   register: vdi_image
   tags: provision
 
 - name: convert vmdk image to vdi format
   when: vmdk_image.changed or not vdi_image.stat.exists
-  command: VBoxManage clonehd --format VDI "{{data_dir}}/vbox-docker.vmdk" "{{data_dir}}/vbox-docker.vdi"
+  command: VBoxManage clonehd --format VDI "{{vm_data}}/vbox-docker.vmdk" "{{vm_data}}/vbox-docker.vdi"
   tags: provision

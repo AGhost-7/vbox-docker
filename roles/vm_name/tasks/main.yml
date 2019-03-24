@@ -1,6 +1,6 @@
 - name: check if name is set
   stat:
-    path: "{{data_dir}}/name"
+    path: "{{vm_data}}/name"
   register: vm_name_stat
   tags: provision
 
@@ -11,7 +11,7 @@
 
 - name: load vm name
   slurp:
-    src: "{{data_dir}}/name"
+    src: "{{vm_data}}/name"
   register: vm_name_file
 
 - name: set vm name 

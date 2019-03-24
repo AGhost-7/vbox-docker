@@ -1,0 +1,5 @@
+- hosts: host
+  roles:
+  - data_dir
+  - vm_name
+  - vm_remove

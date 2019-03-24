@@ -18,6 +18,9 @@ case "$1" in
 	stop)
 		VBoxManage controlvm "$(cat .data/name)" poweroff
 		;;
+	remove)
+		ansible-playbook -i inventory ./remove.yml
+		;;
 	*)
 		echo "Unknown command $1" >&2
 		exit 1

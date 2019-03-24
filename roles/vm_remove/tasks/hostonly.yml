@@ -1,0 +1,20 @@
+
+- name: determine vm network
+  set_fact:
+    vm_network: HostInterfaceNetworking-{{vm_hostonlyif}}
+
+- name: list dhcpservers
+  command: VBoxManage list dhcpservers
+  register: dhcpservers
+
+- name: remove dhcpserver
+  command: VBoxManage dhcpserver remove --netname {{vm_network}}
+  when: dhcpservers.stdout | regex_search('NetworkName:\s+' + vm_network)
+
+- name: list host-only interfaces
+  command: VBoxManage list hostonlyifs
+  register: hostonlyifs
+
+- name: remove host-only interface
+  command: VBoxManage hostonlyif remove {{vm_hostonlyif}}
+  when: hostonlyifs.stdout | regex_search('Name:\s+' + vm_hostonlyif)

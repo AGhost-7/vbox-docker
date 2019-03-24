@@ -1,0 +1,17 @@
+- name: list vms
+  command: VBoxManage list vms
+  register: vms
+
+- name: remove vm
+  when: vm_name in vms.stdout
+  include_tasks: ./vm.yml
+
+- name: remove files
+  with_items:
+    - key
+    - key.pub
+    - interface
+    - name
+  file:
+    path: "{{data_dir}}/{{item}}"
+    state: absent

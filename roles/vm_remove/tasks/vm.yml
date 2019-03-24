@@ -1,0 +1,23 @@
+
+- name: list running vms
+  command: VBoxManage list runningvms
+  register: runningvms
+
+- name: shut down if running
+  command: VBoxManage controlvm "{{vm_name}}" poweroff
+  when: vm_name in runningvms.stdout
+
+- name: load info
+  command: VBoxManage showvminfo "{{vm_name}}" --machinereadable
+  register: vm_info
+
+- name: extract vm facts
+  set_fact:
+    vm_hostonlyif: "{{vm_info.stdout | regex_search('(?<=hostonlyadapter2=\")[^\"]+')}}"
+
+- name: remove hostonly networking
+  when: vm_hostonlyif | length > 0
+  include_tasks: ./hostonly.yml
+
+- name: remove vm
+  command: VBoxManage unregistervm {{vm_name}} --delete

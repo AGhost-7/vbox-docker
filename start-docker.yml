@@ -9,3 +9,4 @@
   roles:
   - docker
   - workspace
+  - nfs

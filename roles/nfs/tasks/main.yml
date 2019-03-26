@@ -1,0 +1,19 @@
+- name: add nfs utils
+  apk:
+    name: nfs-utils
+  tags: provision
+
+- name: start nfs daemon
+  service:
+    name: nfs
+    enabled: True
+    state: started
+  tags: provision
+
+- name: update exports file
+  copy:
+    dest: /etc/exports
+    content: |
+      /root/workspace *(rw,no_subtree_check,all_squash,insecure,async,anonuid=1000,anongid=1000)
+  notify: reload nfs
+  tags: provision

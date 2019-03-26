@@ -1,0 +1,31 @@
+- name: add parted
+  apk:
+    name: parted
+  tags: provision
+
+- name: create partition
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+  tags: provision
+
+- name: create filesystem
+  filesystem:
+    fstype: ext4
+    dev: /dev/sdb1
+  tags: provision
+
+- name: create workspace directory
+  file:
+    state: directory
+    path: /root/workspace
+  tags: provision
+
+- name: mount workspace
+  mount:
+    src: /dev/sdb1
+    path: /root/workspace
+    state: present
+    fstype: ext4
+  tags: provision

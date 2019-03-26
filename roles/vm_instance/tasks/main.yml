@@ -12,6 +12,10 @@
   command: VBoxManage list runningvms
   register: runningvms
 
+- name: workspace
+  import_tasks: ./workspace.yml
+  tags: provision
+
 - name: start virtual machine
   when: vm_name not in runningvms.stdout
   command: VBoxManage startvm "{{vm_name}}" --type headless

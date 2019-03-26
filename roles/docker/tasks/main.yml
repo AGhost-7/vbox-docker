@@ -12,6 +12,11 @@
   register: add_docker
   tags: provision
 
+- name: add docker-py
+  pip:
+    name: docker
+    executable: /usr/bin/pip3
+
 - name: ensure docker starts on reboot
   service:
     name: docker

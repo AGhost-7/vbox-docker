@@ -29,5 +29,5 @@ Run the install script in the repo:
 And then you should be able to spin up the vm and log into it:
 ```
 vbox-docker start
-vbox-docker ssh
+vbox-docker login
 ```

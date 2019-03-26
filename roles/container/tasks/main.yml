@@ -1,0 +1,36 @@
+- name: pull image
+  docker_image:
+    name: "{{container_image}}"
+
+- name: inspect image
+  docker_image_facts:
+    name: "{{container_image}}"
+  register: docker_image
+
+- name: set container user
+  set_fact:
+    container_user: "{{docker_image.images[0].Config.User}}"
+
+- name: get docker group id
+  shell: 'grep docker /etc/group | cut -d : -f 3'
+  register: docker_group
+
+- name: create development environment container
+  docker_container:
+    name: development_environment
+    image: "{{container_image}}"
+    network_mode: host
+    etc_hosts:
+      # TODO: actually implement mapping for this...
+      # host.local is the default gateway of the vm
+      # vm.local is the host-only ip (eth1) of the vm
+      host.local: 127.0.0.1
+      vm.local: 127.0.0.1
+    privileged: True
+    volumes:
+      - /root/.ssh:/home/{{container_user}}/.ssh
+      - /root/workspace:/home/{{container_user}}/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    groups:
+      - "{{docker_group.stdout}}"
+    command: sleep Infinity

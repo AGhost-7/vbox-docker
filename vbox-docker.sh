@@ -8,9 +8,16 @@ if [ -L "$script_source" ]; then
 fi
 cd "$(dirname "$script_source")"
 
+vm_ssh() {
+	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2222 root@localhost $@
+}
+
 case "$1" in
 	ssh)
-		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2222 root@localhost
+		vm_ssh
+		;;
+	login)
+		vm_ssh -t docker exec -ti development_environment tmux new -A -s 0
 		;;
 	start)
 		ansible-playbook -i localhost, ./start-vm.yml

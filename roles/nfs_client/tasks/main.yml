@@ -1,0 +1,10 @@
+- name: ensure workspace exists
+  file:
+    state: directory
+    path: "{{nfs_client_workspace}}"
+
+- name: ensure workspace isnt already mounted
+  command: umount {{nfs_client_workspace}}
+
+- name: mount workspace
+  command: mount -t nfs -o {{nfs_client_options}} {{vm_ip}}:/root/workspace {{nfs_client_workspace}}

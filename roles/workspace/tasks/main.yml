@@ -28,4 +28,13 @@
     path: /root/workspace
     state: present
     fstype: ext4
+  register: workspace_mount
+  tags: provision
+
+- name: set permissions
+  file:
+    path: /root/workspace
+    group: 1000
+    owner: 1000
+  when: workspace_mount.changed
   tags: provision

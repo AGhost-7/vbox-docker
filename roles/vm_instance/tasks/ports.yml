@@ -1,0 +1,14 @@
+
+- name: remove ssh forwarding
+  command: VBoxManage modifyvm "{{vm_name}}" --natpf1 delete guestssh
+
+- name: configure ssh formarding
+  when: not vm_running
+  command: VBoxManage modifyvm "{{vm_name}}" --natpf1 "guestssh,tcp,127.0.0.1,2223,,22"
+
+- name: remove nfs forwarding
+  command: VBoxManage modifyvm "{{vm_name}}" --natpf2 delete nfs
+
+- name: configure nfs port forwarding
+  when: not vm_running
+  command: VBoxManage modifyvm "{{vm_name}}" --natpf2 "nfs,tcp,127.0.0.1,2049,,2049"

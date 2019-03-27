@@ -22,7 +22,7 @@
   retries: 100
   delay: 2
   until: ssh_exit.rc == 0
-  command: ssh {{ssh_options}} -p 2222 -i {{vm_ssh_key}} root@localhost exit
+  command: ssh {{ssh_options}} -p 2223 -i {{vm_ssh_key}} root@localhost exit
   register: ssh_exit
 
 - name: create ssh key
@@ -31,5 +31,5 @@
 
 - name: replace ssh key with local key
   when: not ssh_key_stat.stat.exists
-  command: scp {{ssh_options}} -P 2222 -i {{vm_ssh_key}} "{{vm_data}}/key.pub" root@localhost:/root/.ssh/authorized_keys
+  command: scp {{ssh_options}} -P 2223 -i {{vm_ssh_key}} "{{vm_data}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision

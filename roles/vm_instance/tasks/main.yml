@@ -8,14 +8,22 @@
   include_tasks: ./create.yml
   tags: provision
 
-- name: list running vms
-  command: VBoxManage list runningvms
-  register: runningvms
-
 - name: workspace
   import_tasks: ./workspace.yml
   tags: provision
 
+- name: list running vms
+  command: VBoxManage list runningvms
+  register: runningvms
+
+- name: determine if vm is running
+  set_fact:
+    vm_running: "{{vm_name in runningvms.stdout}}"
+
+- name: configure ports
+  when: not vm_running
+  include_tasks: ./ports.yml
+
 - name: start virtual machine
-  when: vm_name not in runningvms.stdout
+  when: not vm_running
   command: VBoxManage startvm "{{vm_name}}" --type headless

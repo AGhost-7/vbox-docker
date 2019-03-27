@@ -9,7 +9,7 @@ fi
 cd "$(dirname "$script_source")"
 
 vm_ssh() {
-	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2222 root@localhost $@
+	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2223 root@localhost $@
 }
 
 case "$1" in

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 mkdir -p "$HOME/.local/bin"
 
 if [ ! -L "$HOME/.local/bin/vbox-docker" ]; then

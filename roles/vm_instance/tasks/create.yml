@@ -1,6 +1,6 @@
 
 - name: create and register new vm
-  command: VBoxManage createvm --name "{{vm_name}}" --ostype Ubuntu_64 --register
+  command: VBoxManage createvm --name "{{vm_name}}" --ostype Linux_64 --register
   register: vm_created
 
 - name: set ram

@@ -1,6 +1,7 @@
 
 - name: remove ssh forwarding
   command: VBoxManage modifyvm "{{vm_name}}" --natpf1 delete guestssh
+  failed_when: False
 
 - name: configure ssh formarding
   when: not vm_running
@@ -8,6 +9,7 @@
 
 - name: remove nfs forwarding
   command: VBoxManage modifyvm "{{vm_name}}" --natpf2 delete nfs
+  failed_when: False
 
 - name: configure nfs port forwarding
   when: not vm_running

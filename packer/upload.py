@@ -31,7 +31,6 @@ def create_release(build_number):
 def find_minimal():
     for file_name in listdir('./output/minimal'):
         _, extension = path.splitext(file_name)
-        print('extension: {}'.format(extension))
         if extension == '.vmdk':
             return open(path.join('./output/minimal', file_name), 'rb')
 
@@ -56,6 +55,6 @@ def upload_artifacts(release):
 build_number = fetch_build_number()
 print('New build number is {}'.format(build_number))
 release = create_release(build_number)
-print('Created release {}', release['tag_name'])
+print('Created release {}'.format(release['tag_name']))
 print('Uploading artifacts...')
 upload_artifacts(release)

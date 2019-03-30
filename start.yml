@@ -8,6 +8,7 @@
 
 - hosts: vm
   roles:
+  - user
   - docker
   - workspace
   - nfs

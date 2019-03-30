@@ -14,5 +14,5 @@
   copy:
     dest: /etc/exports
     content: |
-      /root/workspace *(rw,no_subtree_check,all_squash,insecure,async,anonuid=1000,anongid=1000)
+      /home/{{user_name}}/workspace *(rw,no_subtree_check,all_squash,insecure,async,anonuid={{user_uid}},anongid={{user_gid}})
   notify: reload nfs

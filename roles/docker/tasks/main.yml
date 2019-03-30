@@ -23,3 +23,9 @@
     enabled: True
     state: started
   tags: provision
+
+- name: add user to docker group
+  user:
+    name: "{{user_name}}"
+    append: True
+    groups: docker

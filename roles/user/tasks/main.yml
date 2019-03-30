@@ -1,5 +1,35 @@
+- name: install useradd
+  apk:
+    name: shadow
+
+- name: create group
+  group:
+    name: "{{user_group_name}}"
+    gid: "{{user_gid}}"
+
 - name: create user
   user:
-    name: developer
+    name: "{{user_name}}"
+    uid: "{{user_uid}}"
+    group: "{{user_group_name}}"
+    shell: /bin/sh
+    password: "{{user_name | password_hash('sha512', 'salt')}}"
     groups:
       - docker
+
+- name: create ssh directory
+  file:
+    state: directory
+    path: "/home/{{user_name}}/.ssh"
+    owner: "{{user_name}}"
+    group: "{{user_group_name}}"
+
+- name: add authorized_keys
+  command: cp /root/.ssh/authorized_keys /home/{{user_name}}/.ssh/authorized_keys
+
+- name: set permissions
+  file:
+    path: "/home/{{user_name}}/.ssh/authorized_keys"
+    mode: 0644
+    owner: "{{user_name}}"
+    group: "{{user_group_name}}"

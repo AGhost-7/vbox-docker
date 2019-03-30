@@ -19,22 +19,22 @@
 - name: create workspace directory
   file:
     state: directory
-    path: /root/workspace
+    path: "/home/{{user_name}}/workspace"
   tags: provision
 
 - name: mount workspace
   mount:
     src: /dev/sdb1
-    path: /root/workspace
-    state: present
+    path: "/home/{{user_name}}/workspace"
+    state: mounted
     fstype: ext4
   register: workspace_mount
   tags: provision
 
 - name: set permissions
   file:
-    path: /root/workspace
-    group: 1000
-    owner: 1000
+    path: "/home/{{user_name}}/workspace"
+    group: "{{user_group_name}}"
+    owner: "{{user_name}}"
   when: workspace_mount.changed
   tags: provision

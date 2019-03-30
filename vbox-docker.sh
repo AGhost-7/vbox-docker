@@ -20,8 +20,7 @@ case "$1" in
 		vm_ssh -t docker exec -ti development_environment tmux new -A -s 0
 		;;
 	start)
-		ansible-playbook -i localhost, ./start-vm.yml
-		ansible-playbook -i localhost, ./start-docker.yml
+		ansible-playbook -i inventory ./start.yml
 		;;
 	stop)
 		VBoxManage controlvm "$(cat .data/name)" poweroff

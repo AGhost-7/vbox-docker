@@ -1,7 +1,7 @@
 
 - name: download alpine image
   get_url:
-    url: https://github.com/AGhost-7/vbox-docker/releases/download/v19.03.27%2B4/vbox-docker.vmdk
+    url: https://github.com/AGhost-7/vbox-docker/releases/download/v19.03.29%2B6/vbox-docker.vmdk
     dest: "{{vm_data}}/vbox-docker.vmdk"
   register: vmdk_image
   tags: provision

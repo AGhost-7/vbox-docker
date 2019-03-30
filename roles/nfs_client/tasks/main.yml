@@ -5,6 +5,7 @@
 
 - name: ensure workspace isnt already mounted
   command: umount {{nfs_client_workspace}}
+  failed_when: False
 
 - name: mount workspace
   command: mount -t nfs -o {{nfs_client_options}} {{vm_ip}}:/root/workspace {{nfs_client_workspace}}

@@ -33,3 +33,11 @@
   when: not ssh_key_stat.stat.exists
   command: scp {{ssh_options}} -P 2223 -i {{vm_ssh_key}} "{{vm_data}}/key.pub" root@localhost:/root/.ssh/authorized_keys
   tags: provision
+
+- name: add vm host
+  add_host:
+    name: 10.77.77.67
+    ansible_ssh_private_key_file: "{{vm_data}}/key"
+    ansible_ssh_user: root
+    ansible_python_interpreter: /usr/bin/python3
+    groups: vm

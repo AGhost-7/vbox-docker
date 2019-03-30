@@ -1,0 +1,18 @@
+- hosts: host
+  roles:
+  - vm_data
+  - vm_image
+  - vm_name
+  - vm_instance
+  - vm_ssh
+
+- hosts: vm
+  roles:
+  - docker
+  - workspace
+  - nfs
+  - container
+
+    #- hosts: host
+    #  roles:
+    #  - nfs_client

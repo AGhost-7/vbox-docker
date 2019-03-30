@@ -16,4 +16,3 @@
     content: |
       /root/workspace *(rw,no_subtree_check,all_squash,insecure,async,anonuid=1000,anongid=1000)
   notify: reload nfs
-  tags: provision

@@ -1,2 +1,2 @@
-nfs_client_workspace: {{ansible_env.HOME}}/workspace
+nfs_client_workspace: "{{ansible_env.HOME}}/workspace"
 nfs_client_options: noatime,nolocks,locallocks

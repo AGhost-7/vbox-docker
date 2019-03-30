@@ -21,11 +21,10 @@
     image: "{{container_image}}"
     network_mode: host
     etc_hosts:
-      # TODO: actually implement mapping for this...
       # host.local is the default gateway of the vm
       # vm.local is the host-only ip (eth1) of the vm
       host.local: "{{ansible_default_ipv4.gateway}}"
-      vm.local: 127.0.0.1
+      vm.local: "{{inventory_hostname}}"
     privileged: True
     volumes:
       - /root/.ssh:/home/{{container_user}}/.ssh

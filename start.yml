@@ -10,6 +10,7 @@
   roles:
   - repos
   - user
+  - guest_additions
   - docker
   - workspace
   - nfs

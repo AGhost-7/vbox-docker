@@ -1,0 +1,30 @@
+
+- name: add virtualbox guest additions
+  apk:
+    name:
+      - virtualbox-guest-additions
+      - virtualbox-guest-modules-virt
+  register: guest_additions
+  tags: provision
+
+- name: reboot vm
+  command: /sbin/reboot
+  when: guest_additions.changed
+  tags: provision
+
+- name: wait for machine to reboot
+  wait_for_connection:
+    delay: 30
+    timeout: 100
+  when: guest_additions.changed
+  tags: provision
+
+- name: load kernel modules
+  lineinfile:
+    path: /etc/modules
+    regexp: "{{item}}"
+    line: "{{item}}"
+  with_items:
+    - vboxpci
+    - vboxdrv
+    - vboxnetflt

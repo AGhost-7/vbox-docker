@@ -1,0 +1,14 @@
+# file shares arent working atm, so just going to use this in the meantime.
+- name: install rsync
+  apk:
+    name: rsync
+  tags: provision
+
+- name: copy keys
+  synchronize:
+    src: "{{hostvars['127.0.0.1'].ansible_env.HOME}}/.ssh"
+    dest: "/home/{{user_name}}/.host-ssh"
+    private_key: ".data/key"
+    copy_links: True
+    archive: False
+  delegate_to: localhost

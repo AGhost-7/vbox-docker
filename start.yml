@@ -13,6 +13,7 @@
   - guest_additions
   - docker
   - workspace
+  - host_ssh
   - nfs
   - container
 

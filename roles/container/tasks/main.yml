@@ -27,7 +27,7 @@
       vm.local: "{{inventory_hostname}}"
     privileged: True
     volumes:
-      - /home/{{user_name}}/.ssh:/home/{{container_user}}/.ssh
+      - /home/{{user_name}}/.host-ssh/.ssh:/home/{{container_user}}/.ssh
       - /home/{{user_name}}/workspace:/home/{{container_user}}/workspace
       - /var/run/docker.sock:/var/run/docker.sock
     groups:

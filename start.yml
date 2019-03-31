@@ -14,6 +14,6 @@
   - nfs
   - container
 
-    #- hosts: host
-    #  roles:
-    #  - nfs_client
+- hosts: host
+  roles:
+  - nfs_client

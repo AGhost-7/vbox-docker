@@ -7,5 +7,22 @@
   command: umount {{nfs_client_workspace}}
   failed_when: False
 
+- name: set mount facts
+  set_fact:
+    vm_ip: "{{groups['vm'][0]}}"
+    vm_workspace: "/home/vbox/workspace"
+
 - name: mount workspace
-  command: mount -t nfs -o {{nfs_client_options}} {{vm_ip}}:/root/workspace {{nfs_client_workspace}}
+  command: mount -t nfs -o {{nfs_client_options}} {{groups['vm'][0]}}://workspace {{nfs_client_workspace}}
+  when: ansible_distribution == "MacOSX"
+  args:
+    warn: False
+
+# This is really just for testing. For this to work properly you will need to
+# add the following to your /etc/fstab:
+# 10.77.77.67:/home/vbox/workspace /home/jonathan/workspace-vbox nfs rw,noauto,noatime,user 0 0
+- name: mount workspace
+  when: ansible_distribution == "Ubuntu"
+  command: mount {{nfs_client_workspace}}
+  args:
+    warn: False

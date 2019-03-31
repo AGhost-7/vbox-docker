@@ -24,6 +24,11 @@ case "$1" in
 		;;
 	stop)
 		VBoxManage controlvm "$(cat .data/name)" poweroff
+		if [ "$(uname)" == "Linux" ]; then
+			umount -l "$HOME/workspace-vbox"
+		else
+			umount "$HOME/workspace-vbox"
+		fi
 		;;
 	remove)
 		ansible-playbook -i localhost, ./remove.yml

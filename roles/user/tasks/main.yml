@@ -14,8 +14,6 @@
     group: "{{user_group_name}}"
     shell: /bin/sh
     password: "{{user_name | password_hash('sha512', 'salt')}}"
-    groups:
-      - docker
 
 - name: create ssh directory
   file:

@@ -13,7 +13,7 @@
     vm_workspace: "/home/vbox/workspace"
 
 - name: mount workspace
-  command: mount -t nfs -o {{nfs_client_options}} {{groups['vm'][0]}}://workspace {{nfs_client_workspace}}
+  command: mount -t nfs -o {{nfs_client_options}} {{groups['vm'][0]}}:/home/vbox/workspace {{nfs_client_workspace}}
   when: ansible_distribution == "MacOSX"
   args:
     warn: False

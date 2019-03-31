@@ -15,6 +15,7 @@ Performance.
 Prerequisites:
 - Virtualbox
 - Ansible
+- `passlib`
 
 Clone this repository:
 ```

@@ -1,0 +1,12 @@
+# needed for docker, shadow, etc.
+- name: ensure that the community repos are enabled
+  lineinfile:
+    path: /etc/apk/repositories
+    regexp: 'community$'
+    line: 'https://dl-4.alpinelinux.org/alpine/v3.9/community'
+  tags: provision
+
+- name: update system
+  update_cache: True
+  upgrade: True
+  tags: provision

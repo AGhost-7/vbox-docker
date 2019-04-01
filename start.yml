@@ -9,6 +9,7 @@
 - hosts: vm
   roles:
   - repos
+  - swap
   - user
   - guest_additions
   - docker

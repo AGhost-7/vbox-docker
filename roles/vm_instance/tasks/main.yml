@@ -24,6 +24,29 @@
   when: not vm_running
   include_tasks: ./ports.yml
 
+- name: set ram
+  when: not vm_running
+  command: VBoxManage modifyvm "{{vm_name}}" --memory "{{vm_memory}}"
+
+- name: set number of cpus
+  when: not vm_running
+  command: VBoxManage modifyvm "{{vm_name}}" --cpus "{{vm_cpus}}"
+
+- name: configure system clock
+  when: not vm_running
+  command: VBoxManage modifyvm "{{vm_name}}" --rtcuseutc on
+
+- name: sync time with host
+  when: not vm_running
+  command: VBoxManage guestproperty set "{{vm_name}}" "/VirtualBox/GuestAdd/VBoxService/--{{item.key}}" "{{item.value}}"
+  with_items:
+  - key: timesync-interval
+    value: 10000
+  - key: timesync-min-adjust
+    value: 100
+  - key: timesync-set-threshold
+    value: 1000
+
 - name: start virtual machine
   when: not vm_running
   command: VBoxManage startvm "{{vm_name}}" --type headless

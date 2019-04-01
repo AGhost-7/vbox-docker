@@ -9,6 +9,7 @@
 - name: check if vdi exists
   stat:
     path: "{{vm_data}}/vbox-docker.vdi"
+    get_checksum: False
   register: vdi_image
   tags: provision
 

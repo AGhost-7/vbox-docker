@@ -4,11 +4,22 @@
     name: rsync
   tags: provision
 
+- name: set path
+  set_fact:
+    host_ssh_path: "/home/{{user_name}}/.host-ssh"
+
 - name: copy keys
   synchronize:
-    src: "{{hostvars['127.0.0.1'].ansible_env.HOME}}/.ssh"
-    dest: "/home/{{user_name}}/.host-ssh"
+    src: "{{hostvars['127.0.0.1'].ansible_env.HOME}}/.ssh/"
+    dest: "{{host_ssh_path}}"
     private_key: ".data/key"
-    copy_links: True
-    archive: False
+    delete: True
   delegate_to: localhost
+
+- name: set permissions
+  file:
+    state: directory
+    path: "{{host_ssh_path}}"
+    owner: "{{user_name}}"
+    group: "{{user_group_name}}"
+    recurse: True

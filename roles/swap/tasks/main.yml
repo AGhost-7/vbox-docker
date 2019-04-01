@@ -1,0 +1,45 @@
+
+- name: check if swapfile exists
+  stat:
+    path: /swapfile
+    get_checksum: False
+  register: swapfile
+  tags: provision
+
+- name: allocate swapfile
+  when: not swapfile.stat.exists
+  command: fallocate -l 2000M /swapfile
+  tags: provision
+
+- name: set swapfile permissions
+  when: not swapfile.stat.exists
+  file:
+    path: /swapfile
+    mode: 0600
+  tags: provision
+
+- name: make into swap
+  when: not swapfile.stat.exists
+  command: mkswap /swapfile
+  tags: provision
+
+- name: add mount entry to fstab
+  mount:
+    state: present
+    fstype: swap
+    src: /swapfile
+    path: none
+  tags: provision
+
+- name: set swapiness to lowest setting
+  sysctl:
+    name: vm.swapiness
+    value: '1'
+  tags: provision
+
+- name: enable swap service
+  service:
+    name: swap
+    enabled: True
+    state: started
+  tags: provision

@@ -12,7 +12,7 @@
   synchronize:
     src: "{{hostvars['127.0.0.1'].ansible_env.HOME}}/.ssh/"
     dest: "{{host_ssh_path}}"
-    private_key: ".data/key"
+    private_key: "{{lookup('env', 'HOME')}}/.local/share/vbox-docker/key"
     delete: True
   delegate_to: localhost
 

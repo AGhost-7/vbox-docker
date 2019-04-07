@@ -21,7 +21,6 @@
   command: VBoxManage modifyvm "{{vm_name}}" --nic1 nat
 
 - name: use the host dns
-  when: not vm_running
   command: VBoxManage modifyvm "{{vm_name}}" --natdnsproxy1 on
 
 - name: add private networking adapter

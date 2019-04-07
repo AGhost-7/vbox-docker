@@ -10,9 +10,17 @@ if [ -L "$script_source" ]; then
 fi
 cd "$(dirname "$script_source")"
 
+ssh_private_key="$HOME/.local/share/vbox-docker/key"
 ssh_user=vbox
+
 vm_ssh() {
-	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i .data/key -p 2223 "$ssh_user@localhost" $@
+	ssh \
+		-o UserKnownHostsFile=/dev/null \
+		-o StrictHostKeyChecking=no \
+		-i "$ssh_private_key" \
+		-p 2223 \
+		"$ssh_user@localhost" \
+		$@
 }
 
 config_params() {
@@ -20,7 +28,7 @@ config_params() {
 		echo ''
 		return
 	fi
-	`which python python3` <<-PYTHON
+	python3 <<-PYTHON
 	from __future__ import print_function
 	import yaml
 	from os import path, environ
@@ -47,7 +55,7 @@ case "$1" in
 		ansible-playbook -i inventory $(config_params) ./start.yml
 		;;
 	stop)
-		VBoxManage controlvm "$(cat .data/name)" poweroff
+		VBoxManage controlvm "$(cat .$HOME/.local/share/vbox-docker/name)" poweroff
 		if [ "$(uname)" == "Linux" ]; then
 			umount -l "$HOME/workspace-vbox"
 		else

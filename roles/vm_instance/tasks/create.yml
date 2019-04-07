@@ -17,10 +17,6 @@
 - name: configure interface
   command: VBoxManage hostonlyif ipconfig {{vm_interface}} --ip 10.77.77.77
 
-    #- name: configure to use dhcp
-    #  command: VBoxManage dhcpserver add --netname "HostInterfaceNetworking-{{vm_interface}}" --netmask 255.255.255.0 --lowerip 10.77.77.5 --upperip 10.77.77.250 --ip 10.77.77.4 --enable
-    #
-
 - name: configure external networking
   command: VBoxManage modifyvm "{{vm_name}}" --nic1 nat
 

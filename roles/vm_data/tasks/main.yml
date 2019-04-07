@@ -1,7 +1,7 @@
 
 - name: set data directory location
   set_fact:
-    vm_data: "{{playbook_dir}}/.data"
+    vm_data: "{{ansible_env.HOME}}/.local/share/vbox-docker"
 
 - name: create directory
   file:

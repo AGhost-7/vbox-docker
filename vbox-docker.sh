@@ -41,6 +41,24 @@ config_params() {
 	PYTHON
 }
 
+show-help() {
+	cat - <<-HELP
+	vbox-docker <subcommand>
+
+	subcommands:
+
+	  ssh - SSH into the docker host.
+
+	  login - SSH into the machine and exec into the developmet container.
+
+	  start - Boots up the VM.
+
+	  stop - Stops the vm.
+
+	  remove - Destroy the VM and remove any associated data.
+	HELP
+}
+
 case "$1" in
 	ssh)
 		if [ "$2" ]; then
@@ -64,6 +82,9 @@ case "$1" in
 		;;
 	remove)
 		ansible-playbook -i localhost, ./remove.yml
+		;;
+	help|--help|-h)
+		show-help
 		;;
 	*)
 		echo "Unknown command $1" >&2

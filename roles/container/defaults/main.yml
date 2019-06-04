@@ -1,1 +1,1 @@
-container_image: aghost7/nodejs-dev:bionic-carbon
+container_image: aghost7/nodejs-dev:bionic-dubnium

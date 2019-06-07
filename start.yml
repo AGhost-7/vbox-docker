@@ -5,6 +5,7 @@
   - vm_name
   - vm_instance
   - vm_ssh
+    #- clipboard
 
 - hosts: vm
   roles:
@@ -16,6 +17,7 @@
   - workspace
   - host_ssh
   - nfs
+  - ntp
   - container
 
 - hosts: host

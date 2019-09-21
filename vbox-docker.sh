@@ -73,7 +73,7 @@ case "$1" in
 		ansible-playbook -i inventory $(config_params) ./start.yml
 		;;
 	stop)
-		VBoxManage controlvm "$(cat .$HOME/.local/share/vbox-docker/name)" poweroff
+		VBoxManage controlvm "$(cat $HOME/.local/share/vbox-docker/name)" poweroff
 		if [ "$(uname)" == "Linux" ]; then
 			umount -l "$HOME/workspace-vbox"
 		else

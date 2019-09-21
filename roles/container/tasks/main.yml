@@ -1,15 +1,30 @@
+- name: create dockerfile directory
+  file:
+    state: directory
+    path: /etc/vbox-docker
+
+- name: copy dockerfile
+  copy:
+    src: Dockerfile
+    dest: /etc/vbox-docker/Dockerfile
+
 - name: pull image
   docker_image:
-    name: "{{container_image}}"
-
-- name: inspect image
-  docker_image_facts:
-    name: "{{container_image}}"
+    name: development_environment
+    build:
+      path: /etc/vbox-docker
+      args:
+        BASE_IMAGE: "{{container_image}}"
+      pull: True
   register: docker_image
+
+- name: get container user
+  command: docker image inspect -f '{{ '{{' }}.ContainerConfig.User{{ '}}' }}' {{container_image}}
+  register: docker_image_user
 
 - name: set container user
   set_fact:
-    container_user: "{{docker_image.images[0].Config.User}}"
+    container_user: "{{docker_image_user.stdout}}"
 
 - name: get docker group id
   shell: 'grep docker /etc/group | cut -d : -f 3'
@@ -17,14 +32,17 @@
 
 - name: create development environment container
   docker_container:
+    recreate: "{{docker_image.changed}}"
     name: development_environment
-    image: "{{container_image}}"
+    image: development_environment
     network_mode: host
     etc_hosts:
       # host.local is the default gateway of the vm
       # vm.local is the host-only ip (eth1) of the vm
       host.local: "{{ansible_default_ipv4.gateway}}"
       vm.local: "{{inventory_hostname}}"
+    env:
+      SNIPSNIP_HOST: host.local
     privileged: True
     volumes:
       - /home/{{user_name}}/.host-ssh:/home/{{container_user}}/.ssh

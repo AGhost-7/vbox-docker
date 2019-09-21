@@ -1,0 +1,6 @@
+- name: enable ntp
+  service:
+    name: ntpd
+    enabled: True
+    state: started
+  tags: provision

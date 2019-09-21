@@ -1,0 +1,34 @@
+- name: add snipsnip
+  pip:
+    name: snipsnip
+    executable: pip3
+    extra_args: --user --upgrade
+    version: 0.6
+
+- name: check if clipboard server is running
+  shell: |
+    echo "vm_data: {{vm_data}}"
+    set -xeo pipefail
+    if [ -f "{{vm_data}}/snipsnip.pid" ]; then
+      pid="$(cat "{{vm_data}}/snipsnip.pid")"
+      if ps -p "$pid" > /dev/null && ps -p "$pid" | grep -q snipsnip; then
+        exit 0
+      fi
+    fi
+    exit 1
+  failed_when: False
+  register: clipboard_running
+
+- name: start clipboard server
+  shell: |
+    snipsnip server --port 8099 2>&1 > "{{vm_data}}/snipsnip.log" 2>&1 &
+    pid="$!"
+    sleep 1
+
+    if ps -p "$pid" > /dev/null; then
+      echo "$pid" > "{{vm_data}}/snipsnip.pid"
+    else
+      echo 'Error running clipboard server!' >&2
+      exit 1
+    fi
+  when: clipboard_running.rc == 1

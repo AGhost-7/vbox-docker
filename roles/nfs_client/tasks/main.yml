@@ -4,7 +4,7 @@
     path: "{{nfs_client_workspace}}"
 
 - name: ensure workspace isnt already mounted
-  command: umount {{nfs_client_workspace}}
+  command: umount -f {{nfs_client_workspace}}
   failed_when: False
 
 - name: set mount facts
